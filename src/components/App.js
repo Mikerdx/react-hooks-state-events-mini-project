@@ -1,40 +1,52 @@
-import React, { useState } from "react";
-import TaskList from "./TaskList";
-import TaskForm from "./TaskForm"; // Assuming TaskForm is your form component for adding tasks
-
-const CATEGORIES = ['All', 'Code', 'Food', 'Money', 'Misc'];
-
-const TASKS = [
-  { text: 'Buy rice', category: 'Food' },
-  { text: 'Save a tenner', category: 'Money' },
-  { text: 'Build a todo app', category: 'Code' },
-  { text: 'Build todo API', category: 'Code' },
-  { text: 'Get an ISA', category: 'Money' },
-  { text: 'Cook rice', category: 'Food' },
-  { text: 'Tidy house', category: 'Misc' }
-];
+// App.js
+import React, { useState } from 'react';
 
 function App() {
-  const [tasks, setTasks] = useState(TASKS);
-  const [selectedCategory, setSelectedCategory] = useState('All');
+  const [tasks, setTasks] = useState([]);
+  const [taskDetail, setTaskDetail] = useState("");
+  const [category, setCategory] = useState("Code");
 
-  const handleCategoryClick = (category) => {
-    setSelectedCategory(category);
+  const handleAddTask = (e) => {
+    e.preventDefault();
+    setTasks([...tasks, { detail: taskDetail, category }]);
+    setTaskDetail(""); // Clear the input
   };
-
-  const handleTaskFormSubmit = (newTask) => {
-    setTasks([...tasks, newTask]);
-  };
-
-  const filteredTasks = selectedCategory === 'All'
-    ? tasks
-    : tasks.filter(task => task.category === selectedCategory);
 
   return (
-    <div>
-      <h1>Task Manager</h1>
-      <TaskList tasks={filteredTasks} />
-      <TaskForm onTaskFormSubmit={handleTaskFormSubmit} />
+    <div className="App">
+      <form onSubmit={handleAddTask}>
+        <label>
+          Details
+          <input
+            type="text"
+            value={taskDetail}
+            onChange={(e) => setTaskDetail(e.target.value)}
+          />
+        </label>
+        <label>
+          Category
+          <select
+            value={category}
+            onChange={(e) => setCategory(e.target.value)}
+          >
+            <option value="Code">Code</option>
+            <option value="Food">Food</option>
+            <option value="Money">Money</option>
+            <option value="Misc">Misc</option>
+          </select>
+        </label>
+        <input type="submit" value="Add task" />
+      </form>
+
+      <div className="tasks">
+        {tasks.map((task, index) => (
+          <div key={index} className="task">
+            <div className="label">{task.category}</div>
+            <div className="text">{task.detail}</div>
+            <button>X</button>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }

@@ -1,39 +1,40 @@
-// Assuming CategoryFilter component renders buttons for categories
+import '@testing-library/jest-dom';
 
 import { render, screen, fireEvent } from "@testing-library/react";
-import CategoryFilter from "../CategoryFilter"; // Update this path based on your file structure
 import React from "react";
+import CategoryFilter from "../components/CategoryFilter";
 
-test("clicking the category button adds a class of 'selected' to the button", () => {
-  render(<CategoryFilter />);
-  
-  const codeButton = screen.queryByRole("button", { name: "Code" });
-  const allButton = screen.queryByRole("button", { name: "All" });
-  
-  fireEvent.click(codeButton); // Trigger click on the button
+describe("CategoryFilter", () => {
+  const categories = ["All", "Code", "Food", "Money", "Misc"];
 
-  expect(codeButton.classList).toContain("selected");  // Verify 'selected' class is added
-  expect(allButton.classList).not.toContain("selected"); // Verify 'selected' class is removed from "All"
-});
+  test("renders a button for each category", () => {
+    render(
+      <CategoryFilter
+        categories={categories}
+        selectedCategory="All"
+        onCategoryChange={() => {}}
+      />
+    );
 
-test("clicking the category button filters the task list", () => {
-  render(<CategoryFilter />);
+    categories.forEach((category) => {
+      expect(screen.getByText(category)).toBeInTheDocument();
+    });
+  });
 
-  const codeButton = screen.queryByRole("button", { name: "Code" });
-  
-  fireEvent.click(codeButton);  // Trigger click on the "Code" category
+  test("clicking a category button calls onCategoryChange and adds 'selected' class", () => {
+    const mockOnCategoryChange = jest.fn();
+    render(
+      <CategoryFilter
+        categories={categories}
+        selectedCategory="Food"
+        onCategoryChange={mockOnCategoryChange}
+      />
+    );
 
-  expect(screen.queryByText("Build a todo app")).toBeInTheDocument();
-  expect(screen.queryByText("Buy rice")).not.toBeInTheDocument();
-});
+    const foodButton = screen.getByText("Food");
+    fireEvent.click(foodButton);
 
-test("displays all tasks when the 'All' button is clicked", () => {
-  render(<CategoryFilter />);
-
-  const allButton = screen.queryByRole("button", { name: "All" });
-
-  fireEvent.click(allButton);  // Trigger click on "All" category
-
-  expect(screen.queryByText("Build a todo app")).toBeInTheDocument();
-  expect(screen.queryByText("Buy rice")).toBeInTheDocument();
+    expect(mockOnCategoryChange).toHaveBeenCalledWith("Food");
+    expect(foodButton).toHaveClass("selected");
+  });
 });

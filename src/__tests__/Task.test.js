@@ -1,5 +1,7 @@
+
+import '@testing-library/jest-dom';
 import { render, screen, fireEvent } from '@testing-library/react';
-import Task from '../Task'; // Ensure correct path
+import Task from '../components/Task';
 
 const task = { category: 'Code', text: 'Build a React app' };
 

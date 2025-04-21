@@ -1,5 +1,8 @@
+import '@testing-library/jest-dom';
+
 import { render, screen, fireEvent } from '@testing-library/react';
-import TaskList from '../TaskList'; // Adjust path if needed
+import TaskList from '../components/TaskList';
+
 
 const tasks = [
   { category: 'Code', text: 'Build a React app' },
