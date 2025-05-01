@@ -2,6 +2,8 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import App from '../components/App';
 import { CATEGORIES } from '../components/data'; // Ensure the correct import path
+import '@testing-library/jest-dom';
+
 
 test('adds a new item to the list when the form is submitted', async () => {
   render(<App />);
